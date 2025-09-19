@@ -1,0 +1,28 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Install copier
+        run: python -m pip install copier
+      - name: Generate template
+        run: copier copy . build
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            build/*.sty
+            build/*.tex
+            build/*.cls
